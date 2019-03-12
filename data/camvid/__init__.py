@@ -1,0 +1,1 @@
+from .camvid import CamVid

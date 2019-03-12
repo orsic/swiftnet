@@ -1,0 +1,5 @@
+Pillow==5.4.1
+torch==1.0.0a0+db5d313
+torchvision==0.2.1
+numpy==1.16.1
+tqdm==4.28.1
