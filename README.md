@@ -15,12 +15,6 @@ CVPR, 2019.
 pip install -r requirements.txt
 ```
 
-### Download pre-trained models
-```bash
-wget http://elbereth.zemris.fer.hr/swiftnet/swiftnet_ss_cs.pt -P weights/
-wget http://elbereth.zemris.fer.hr/swiftnet/swiftnet_pyr_cs.pt -P weights/
-```
-
 ### Download Cityscapes
 
 From https://www.cityscapes-dataset.com/downloads/ download: 
