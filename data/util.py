@@ -2,32 +2,9 @@ import random
 from torch.utils.data import Dataset
 import torch
 import numpy as np
-from time import perf_counter
-
-
-class SplitDataset(Dataset):
-    def __init__(self, dataset, transforms=lambda x: x, indices=()):
-        self.dataset = dataset
-        self.transforms = transforms
-        self.indices = indices
-
-    def __len__(self):
-        return len(self.indices)
-
-    def __getitem__(self, item):
-        idx = self.indices[item]
-        return self.transforms(self.dataset[idx])
-
-    def __getattr__(self, item):
-        return getattr(self.dataset, item)
-
-
-def random_indices(N, seed=5, ratio=.8):
-    indices = list(range(N))
-    random.seed(seed)
-    random.shuffle(indices)
-    split = int(ratio * N)
-    return indices[:split], indices[split:]
+import pickle
+from collections import defaultdict
+from PIL import Image as pimg
 
 
 def disparity_distribution_uniform(max_disp, num_bins):
@@ -87,7 +64,62 @@ def downsample_labels_th(labels, factor, num_classes):
     target_dist /= dist_sum
     return target_dist, valid_mask
 
+
 def equalize_hist_disparity_distribution(d, L):
     cd = np.cumsum(d / d.sum())
     Y = np.round((L - 1) * cd).astype(np.uint8)
     return np.array([np.argmax(Y == i) for i in range(L - 1)])
+
+
+def bb_intersection_over_union(boxA, boxB):
+    # determine the (x, y)-coordinates of the intersection rectangle
+    xA = max(boxA[0], boxB[0])
+    yA = max(boxA[1], boxB[1])
+    xB = min(boxA[2], boxB[2])
+    yB = min(boxA[3], boxB[3])
+
+    # compute the area of intersection rectangle
+    interArea = max(0, xB - xA + 1) * max(0, yB - yA + 1)
+
+    # compute the area of both the prediction and ground-truth
+    # rectangles
+    boxAArea = (boxA[2] - boxA[0] + 1) * (boxA[3] - boxA[1] + 1)
+    boxBArea = (boxB[2] - boxB[0] + 1) * (boxB[3] - boxB[1] + 1)
+
+    # compute the intersection over union by taking the intersection
+    # area and dividing it by the sum of prediction + ground-truth
+    # areas - the interesection area
+    iou = interArea / float(boxAArea + boxBArea - interArea)
+
+    # return the intersection over union value
+    return iou
+
+
+def one_hot_encoding(labels, C):
+    '''
+    Converts an integer label torch.autograd.Variable to a one-hot Variable.
+
+    Parameters
+    ----------
+    labels : torch.autograd.Variable of torch.cuda.LongTensor
+        N x 1 x H x W, where N is batch size.
+        Each value is an integer representing correct classification.
+    C : integer.
+        number of classes in labels.
+
+    Returns
+    -------
+    target : torch.autograd.Variable of torch.cuda.FloatTensor
+        N x C x H x W, where C is class number. One-hot encoded.
+    '''
+    one_hot = torch.FloatTensor(labels.size(0), C, labels.size(2), labels.size(3)).to(labels.device).zero_()
+    target = one_hot.scatter_(1, labels.data, 1)
+
+    return target
+
+
+def crop_and_scale_img(img: pimg, crop_box, target_size, pad_size, resample, blank_value):
+    target = pimg.new(img.mode, pad_size, color=blank_value)
+    target.paste(img)
+    res = target.crop(crop_box).resize(target_size, resample=resample)
+    return res

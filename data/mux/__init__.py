@@ -1,1 +1,1 @@
-from .transform import *
+from .util import pyramid_sizes

@@ -28,9 +28,37 @@ From https://www.cityscapes-dataset.com/downloads/ download:
 * gtFine_trainvaltest.zip (241MB)
 
 Either download and extract to `datasets/` or create a symbolic link `datasets/Cityscapes`
+Expected dataset structure for Cityscapes is:
+```
+labels/
+    train/
+        aachen/
+            aachen_000000_000019.png
+            ...
+        ...
+    val/
+        ...
+rgb/
+    train/
+        aachen/
+            aachen_000000_000019.png
+            ...
+        ...
+    val/
+        ...
+```
+
 
 ### Evaluate
+##### Pre-trained Cityscapes models [available](https://drive.google.com/drive/folders/1DqX-N-nMtGG9QfMY_cKtULCKTfEuV4WT?usp=sharing)
+* Download and extract to `weights` directory.
+
+Set `evaluating = True` inside config file (eg. `configs/rn18_single_scale.py`) and run:
 ```bash
-python eval.py configs/single_scale.py
-python eval.py configs/pyramid.py
+python eval.py configs/rn18_single_scale.py
+``` 
+
+### Train
+```bash
+python train.py configs/rn18_single_scale.py --store_dir=/path/to/store/experiments
 ``` 
