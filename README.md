@@ -2,10 +2,18 @@
 
 Source code to reproduce results from 
 <div class="highlight highlight-html"><pre>
-<b>In Defense of Pre-trained ImageNet Architectures for Real-time Semantic Segmentation of Road-driving Images
+<b><a href="https://www.sciencedirect.com/science/article/abs/pii/S0031320320304143">Efficient semantic segmentation with pyramidal fusion</a></b>
+<a href=https://github.com/orsic>Marin Oršić</a>, <a href=http://www.zemris.fer.hr/~ssegvic/index_en.html>Siniša Šegvić</a>
+Pattern Recognition, 2020.
+</pre>
+
+<pre>
+<b><a href="https://openaccess.thecvf.com/content_CVPR_2019/papers/Orsic_In_Defense_of_Pre-Trained_ImageNet_Architectures_for_Real-Time_Semantic_Segmentation_CVPR_2019_paper.pdf">In Defense of Pre-trained ImageNet Architectures for Real-time Semantic Segmentation of Road-driving Images</a>
 <a href=https://github.com/orsic>Marin Oršić*</a>, <a href=https://ivankreso.github.io/>Ivan Krešo*</a>, <a href=http://www.zemris.fer.hr/~ssegvic/index_en.html>Siniša Šegvić</a>, Petra Bevandić (* denotes equal contribution)</b>
 CVPR, 2019.
-</pre></div>
+</pre>
+
+</div>
 
 ## Steps to reproduce
 
